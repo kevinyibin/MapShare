@@ -1,0 +1,33 @@
+/* pages/map/map.wxss */
+.showMap {
+    height: 1200rpx;
+    margin-top: 0rpx;
+}
+.buttonView {
+    height: 100rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.avatar{   
+    height: 50px;    
+    width: 50px;    
+    border-radius: 50%;
+    /* border: 1px solid black; */
+}
+.avatarButton {
+    background-color: rgb(255, 215, 139);
+    height: 50px;    
+    width: 50px; 
+    border-radius: 50%;
+    margin-top: 10rpx;
+    margin-left: 10rpx;
+}
+.posButton {
+    background-color: #dbeeb5;
+    height: 50px;    
+    width: 50px; 
+    border-radius: 50%;
+    margin-top: 10rpx;
+    margin-left: 10rpx;
+}

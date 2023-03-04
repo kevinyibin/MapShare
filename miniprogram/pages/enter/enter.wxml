@@ -1,0 +1,17 @@
+<view class="insert-code">
+    <view>
+        <view class="insert-title">请输入房间号</view>
+        <view class="insert-tips">8位房间号</view>
+    </view>
+    <view>
+        <view class="v-code flex-content">
+            <block wx:for="{{8}}" wx:key="item">
+                <input data-code="v" class="{{roomid.length === index && isVFocus ? 'is-input' : ''}}" type="number" value="{{roomid.length>=index+1 ? roomid[index] : ''}}" disabled catchtap="tapFn"></input>
+            </block>
+        </view>
+        <input type="number" class="ipt" maxlength="8" focus="{{isVFocus}}" bindinput="showVCode"></input>
+    </view>
+    <view>
+        <button class='btn1' bindtap="goToPage1">进入</button>
+    </view>
+</view>

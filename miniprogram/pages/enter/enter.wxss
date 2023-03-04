@@ -1,0 +1,60 @@
+.insert-code{
+    padding: 48rpx;
+  }
+  .v-code{
+    margin-top: 100rpx;
+  }
+  .insert-title{
+    font-size: 36rpx;
+    color: #000000;
+    font-weight: bold;
+  }
+  .insert-tips{
+    font-size: 24rpx;
+    color: #959191;
+    margin-top: 20rpx;
+  }
+  .v-code input{
+    width: 75rpx;
+    height: 72rpx;
+    margin-right: 30rpx;
+    padding-bottom: 8rpx;
+    border: 2rpx solid #cccccd;
+    text-align: center;
+    color: #333333;
+    font-size: 38rpx;
+    border-radius: 10rpx;
+  }
+  .flex-content{
+    display: flex;
+    align-items: center;
+  }
+    .is-input{
+    border-color: #079aff !important;
+  }
+  .ipt{
+    height: 0;
+    width: 0;
+  }
+  .c-blue{
+    color: #079aff;
+  }
+  .again-tip{
+    font-size: 28rpx;
+    color: #959191;
+  }
+  .next-btn{
+    margin-top: 80rpx;
+  }
+
+  .btn1 {
+    width:80%;
+    margin-top:130rpx;
+    background-color: rgb(47, 170, 252);
+    color: white;
+    border-radius: 98rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }

@@ -1,0 +1,31 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/me/me",
+    "pages/index/index",
+    "pages/map/map",
+    "pages/enter/enter"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "地图共享",
+    "navigationBarTextStyle": "black"
+  },
+  "useExtendedLib": {
+    "weui": true
+  },
+  "requiredPrivateInfos": [
+      "getLocation",
+      "onLocationChange",
+      "startLocationUpdate"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于在共享地图实时更新位置"
+    }
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}
