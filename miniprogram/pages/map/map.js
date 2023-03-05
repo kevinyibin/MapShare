@@ -14,6 +14,7 @@ Page({
         nickName: '',
         // curId: 0,
         markers: [],
+        isFirstTime:true
 
     },
 
@@ -29,7 +30,8 @@ Page({
             userAvatar: userinfo.avatarUrl,
             // 'markers[0].iconPath': userinfo.avatarUrl,
             roomid: options.roomid,
-            nickName: userinfo.nickName
+            nickName: userinfo.nickName,
+            isFirstTime:true
         })
         // console.log(this.data.roomid)
 
@@ -48,10 +50,6 @@ Page({
                 mpCtx.moveToLocation();
 
                 this.insertOrUpdate()
-                this.updateLocation()
-                setInterval(() => {
-                    this.queryAndUpdate()
-                }, 5000)
 
             // })
             // .catch(err => {
@@ -79,6 +77,7 @@ Page({
                     if(data.participant[i].nickName == this.data.nickName) {
                         data.participant[i].latitude = newLatitude;
                         data.participant[i].longitude = newLongitude;
+                        break;
                     }
                 }
                 wx.cloud.database().collection('room').doc(r.data[0]._id).update({
@@ -119,7 +118,8 @@ Page({
                     this.setData({
                         roomIndexId:ress._id
                     }) //返回的res里面有_id的值，这个_id是系统自动生成的。
-                    this.queryAndUpdate()
+                    // this.queryAndUpdate()
+                    this.updateLocation()
                 }).catch(err => {
                     console.log(err)
                 })
@@ -130,7 +130,7 @@ Page({
                 }) 
                 console.log("[update]" + "_id:" + this.data.roomIndexId);
                 let userHaveJoinedTheMap = false;
-                curParticipants = res.data[0].participant
+                const curParticipants = res.data[0].participant
                 curParticipants.forEach((ele) => {
                     if (ele.nickName == this.data.nickName) userHaveJoinedTheMap = true;
                 })
@@ -153,19 +153,31 @@ Page({
                             }
                         }).then((res) => {
                             console.log(res.stats)
-                            this.queryAndUpdate();
+                            // this.queryAndUpdate();
+                            this.updateLocation()
                         }).catch(err => {
                             console.log(err)
                         })
                     })
                 } else {
-                    this.queryAndUpdate();
+                    // this.queryAndUpdate();
+                    this.updateLocation()
                 }
             }
         })
     },
 
     queryAndUpdate() {
+        // if(this.data.isFirstTime) {
+        //     this.updateLocation()
+        //     this.setData({
+        //         isFirstTime:false
+        //     })
+        //     // setInterval(() => {
+        //     //     this.queryAndUpdate()
+        //     // }, 5000)
+        // }
+        
         wx.cloud.database().collection('room').where({
             roomid: this.data.roomid
         }).get().then(res => {
@@ -265,6 +277,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload() {
+        wx.offLocationChange()
         // wx.cloud.database().collection('room').where({
         //     roomid: this.data.roomid,
         // }).get().then((r) => {
