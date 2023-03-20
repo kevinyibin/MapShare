@@ -1,8 +1,6 @@
 {
   "pages": [
     "pages/login/login",
-    "pages/me/me",
-    "pages/index/index",
     "pages/map/map",
     "pages/enter/enter"
   ],
@@ -10,7 +8,7 @@
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "地图共享",
+    "navigationBarTitleText": "定位捉迷藏",
     "navigationBarTextStyle": "black"
   },
   "useExtendedLib": {

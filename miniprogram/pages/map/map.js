@@ -63,36 +63,39 @@ Page({
 
     },
 
-    updateLocation() {
-        wx.startLocationUpdate();
-        wx.onLocationChange((res) => { 
-            const newLatitude = res.latitude
-            const newLongitude = res.longitude
-            wx.cloud.database().collection('room').where({
-                roomid: this.data.roomid,
-            }).get().then((r) => {
-                console.log(r)
-                let data = r.data[0]
-                for(let i=0;i<data.participant.length;i++) {
-                    if(data.participant[i].nickName == this.data.nickName) {
-                        data.participant[i].latitude = newLatitude;
-                        data.participant[i].longitude = newLongitude;
-                        break;
-                    }
+    locationChangeFunc(res) {
+        const newLatitude = res.latitude
+        const newLongitude = res.longitude
+        wx.cloud.database().collection('room').where({
+            roomid: this.data.roomid,
+        }).get().then((r) => {
+            console.log(r)
+            let data = r.data[0]
+            for(let i=0;i<data.participant.length;i++) {
+                if(data.participant[i].nickName == this.data.nickName) {
+                    data.participant[i].latitude = newLatitude;
+                    data.participant[i].longitude = newLongitude;
+                    break;
                 }
-                wx.cloud.database().collection('room').doc(r.data[0]._id).update({
-                    data: {
-                        roomid: data.roomid,
-                        participant: [...data.participant]
-                    }
-                }).then((res) => {
-                    console.log(res.stats)
-                    this.queryAndUpdate();
-                }).catch(err => {
-                    console.log(err)
-                })
+            }
+            wx.cloud.database().collection('room').doc(r.data[0]._id).update({
+                data: {
+                    roomid: data.roomid,
+                    participant: [...data.participant]
+                }
+            }).then((res) => {
+                console.log(res.stats)
+                this.queryAndUpdate();
+            }).catch(err => {
+                console.log(err)
             })
         })
+    },
+
+    updateLocation() {
+        wx.startLocationUpdate();
+        const throttleFunc = this.throttle(this.locationChangeFunc,2000)
+        wx.onLocationChange(throttleFunc)
     },
 
     insertOrUpdate() {
@@ -187,35 +190,65 @@ Page({
             // })
             // console.log("roomIndexIdSet:" + this.data.roomIndexId)
             const participant = res.data[0].participant
+            const newMarkers = []
             for (let i = 0; i < participant.length; i++) {
-                const avatarKey = `markers[${i}].iconPath`
-                const longitudeKey = `markers[${i}].longitude`
-                const latitudeKey = `markers[${i}].latitude`
-                // const idKey = `markers[${i}].id`
-                const heightKey = `markers[${i}].height`
-                const widthKey = `markers[${i}].width`
-                const nickNameKey = `markers[${i}].nickName`
-                const nickNameTitleKey = `markers[${i}].title`
+                // const avatarKey = `markers[${i}].iconPath`
+                // const longitudeKey = `markers[${i}].longitude`
+                // const latitudeKey = `markers[${i}].latitude`
+                // // const idKey = `markers[${i}].id`
+                // const heightKey = `markers[${i}].height`
+                // const widthKey = `markers[${i}].width`
+                // const nickNameKey = `markers[${i}].nickName`
+                // const nickNameTitleKey = `markers[${i}].title`
 
                 // if (nickName == this.data.nickName) {
                 //     this.setData({
                 //         curId: i
                 //     })
                 // }
-                this.setData({
-                    [avatarKey]: participant[i].userAvatar,
-                    [longitudeKey]: participant[i].longitude,
-                    [latitudeKey]: participant[i].latitude,
-                    // [idKey]: i,
-                    [heightKey]: 30,
-                    [widthKey]: 30,
-                    [nickNameKey]: participant[i].nickName,
-                    [nickNameTitleKey]: participant[i].nickName,
+                // this.setData({
+                //     [avatarKey]: participant[i].userAvatar,
+                //     [longitudeKey]: participant[i].longitude,
+                //     [latitudeKey]: participant[i].latitude,
+                //     [idKey]: i,
+                //     [heightKey]: 30,
+                //     [widthKey]: 30,
+                //     [nickNameKey]: participant[i].nickName,
+                //     [nickNameTitleKey]: participant[i].nickName,
+                // })
+
+                newMarkers.push({
+                    iconPath: participant[i].userAvatar,
+                    longitude: participant[i].longitude,
+                    latitude: participant[i].latitude,
+                    id: i,
+                    height: 30,
+                    width: 30,
+                    nickName: participant[i].nickName,
+                    title: participant[i].nickName,
                 })
             }
-            // console.log('[marker]' + JSON.stringify(this.data.markers))
+            this.setData({
+                markers:newMarkers
+            })
+            console.log('[marker]' + JSON.stringify(this.data.markers))
         })
     },
+
+    throttle(fn, delay) {
+        let timer = null
+        
+        return function() {
+            if (timer) {
+                return
+            }
+            timer = setTimeout(() => {
+                fn.apply(this, arguments)
+                timer = null
+            },delay)
+        }
+    },
+
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -278,29 +311,24 @@ Page({
      */
     onUnload() {
         wx.offLocationChange()
-        // wx.cloud.database().collection('room').where({
-        //     roomid: this.data.roomid,
-        // }).get().then((r) => {
-        //     // console.log(r)
-        //     let data = r.data[0]
-        //     for(let i=0;i<data.participant.length;i++) {
-        //         if(data.participant[i].nickName == this.data.nickName){
-        //             data.participant.splice(i,1)
-        //         }
-        //     }
-        //     console.log('[data.participant]' + JSON.stringify(data.participant))
-        //     wx.cloud.database().collection('room').doc(r.data[0]._id).update({
-        //         data: {
-        //             roomid: data.roomid,
-        //             participant: [...data.participant]
-        //         }
-        //     }).then((res) => {
-        //         console.log(res.stats)
-        //         this.queryAndUpdate();
-        //     }).catch(err => {
-        //         console.log(err)
-        //     })
-        // })
+        wx.cloud.database().collection('room').where({
+            roomid: this.data.roomid,
+        }).get().then((r) => {
+            // console.log(r)
+            let data = r.data[0]
+            for(let i=0;i<data.participant.length;i++) {
+                if(data.participant[i].nickName == this.data.nickName){
+                    data.participant.splice(i,1)
+                }
+            }
+            console.log('[data.participant]' + JSON.stringify(data.participant))
+            wx.cloud.database().collection('room').doc(r.data[0]._id).update({
+                data: {
+                    roomid: data.roomid,
+                    participant: [...data.participant]
+                }
+            })
+        })
 
     },
 

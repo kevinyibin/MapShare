@@ -1,11 +1,11 @@
 /* pages/login/login.wxss */
 
 .loadType {
-    margin-top: 800rpx;
+    margin-top: 700rpx;
 }
 
 button {
-    margin-top: 20rpx;
+    margin-top: 10rpx;
 }
 
 .avatar-wrapper {
@@ -20,6 +20,14 @@ button {
     display: block;
     width: 56px;
     height: 56px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    color: gray;
+    margin-top: -50rpx;
+    margin-bottom: 80rpx;
 }
 
 .container {
